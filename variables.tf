@@ -45,6 +45,22 @@ variable "vm_count" {
   description = "Cantidad de instancias idénticas a desplegar"
 }
 
+variable "vm_name_prefix" {
+  type        = string
+  description = "Prefijo de nombre para cada VM. Si no se define, Terraform pedirá el valor por consola."
+}
+
+variable "vm_domain" {
+  type        = string
+  default     = ".pi.playground.net"
+  description = "Dominio usado para el nombre completo de las VMs."
+}
+
+variable "vm_folder_path" {
+  type        = string
+  description = "Ruta del folder de VM bajo el datacenter vm root. No duplique /Playground/vm. Ejemplo: WPC/Ian Lucero."
+}
+
 variable "resource_pool_name" {
   type        = string
   description = "Nombre o ruta del Resource Pool asignado (ej: 'RP-Production' o 'Cluster01/Resources/RP-Tier1')"

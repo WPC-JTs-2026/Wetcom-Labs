@@ -1,22 +1,23 @@
 locals {
-  vm_sufix = ".pi.playground.net"
+  // Using variables directly: `vm_domain` and `vm_folder_path` from variables.tf
 }
 
 resource "vsphere_virtual_machine" "WPC" {
   count = var.vm_count
 
-  name             = "${format("tf%02d", count.index + 1)}${local.vm_sufix}"
+  name = "${var.vm_name_prefix}${format("%02d", count.index + 1)}${var.vm_domain}"
   # Asignación del ID del Resource Pool validado
   resource_pool_id = data.vsphere_resource_pool.pool.id
-  
-  # Asignación de la ruta de la carpeta de destino
-  # folder           = data.vsphere_folder.folder.path    
 
-  datastore_id     = data.vsphere_datastore.datastore.id
+  # Asignación de la ruta de la carpeta de destino (usando la variable directamente).
+  # El valor debe ser el subtree bajo /<datacenter>/vm, sin repetir /Playground/vm.
+  folder = var.vm_folder_path
 
-  num_cpus = data.vsphere_virtual_machine.template.num_cpus
-  memory   = data.vsphere_virtual_machine.template.memory
-  guest_id = data.vsphere_virtual_machine.template.guest_id
+  datastore_id = data.vsphere_datastore.datastore.id
+
+  num_cpus  = data.vsphere_virtual_machine.template.num_cpus
+  memory    = data.vsphere_virtual_machine.template.memory
+  guest_id  = data.vsphere_virtual_machine.template.guest_id
   scsi_type = data.vsphere_virtual_machine.template.scsi_type
 
   network_interface {
@@ -35,8 +36,8 @@ resource "vsphere_virtual_machine" "WPC" {
 
     customize {
       linux_options {
-        host_name = "${format("tf%02d", count.index + 1)}"
-        domain    = "${local.vm_sufix}"
+        host_name = "${var.vm_name_prefix}${format("%02d", count.index + 1)}"
+        domain    = var.vm_domain
       }
 
       network_interface {
