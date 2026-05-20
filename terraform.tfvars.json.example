@@ -1,12 +1,15 @@
 {
-  "vsphere_server": "fqdn",
-  "vsphere_user": "user",
-  "vsphere_password": "password",
+  "vsphere_server": "vcenter-001.playground.net",
+  "vsphere_user": "Usuario",
+  "vsphere_password": "Password",
   "datacenter_name": "Playground",
   "cluster_name": "Cluster-001",
   "datastore_name": "vSanDatastore",
   "network_name": "WPC - JTS 2026",
   "template_name": "ubuntu-template.pi.playground.net",
   "resource_pool_name": "WPC",
+  "vm_folder_path": "WPC/Usuario",
+  "vm_name_prefix": "linux-vm",
+  "vm_domain": ".il.playground.net",
   "vm_count": 1
 }
