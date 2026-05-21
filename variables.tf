@@ -52,7 +52,6 @@ variable "vm_name_prefix" {
 
 variable "vm_domain" {
   type        = string
-  default     = ".wpc.playground.net"
   description = "Dominio usado para el nombre completo de las VMs."
 }
 
