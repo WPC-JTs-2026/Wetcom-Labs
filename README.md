@@ -46,3 +46,11 @@ terraform apply
 terraform apply -var-file=terraform.tfvars.json
 ```
 Luego de ejecutar `terraform apply`, se consolidarán los cambios ejecutando de forma ordenada las llamadas API contra vCenter. También se genera el archivo local terraform.tfstate.
+'''
+
+# Documentación Útil
+
+- [vSphere Provider For Terraform](https://registry.terraform.io/providers/hashicorp/vsphere/latest/docs)
+
+# Data NSX
+![alt text](image.png)

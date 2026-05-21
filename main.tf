@@ -6,6 +6,7 @@ resource "vsphere_virtual_machine" "WPC" {
   count = var.vm_count
 
   name = "${var.vm_name_prefix}${format("%02d", count.index + 1)}${var.vm_domain}"
+
   # Asignación del ID del Resource Pool validado
   resource_pool_id = data.vsphere_resource_pool.pool.id
 

@@ -41,7 +41,7 @@ variable "template_name" {
 
 variable "vm_count" {
   type        = number
-  default     = 3
+  default     = 1
   description = "Cantidad de instancias idénticas a desplegar"
 }
 
@@ -52,7 +52,7 @@ variable "vm_name_prefix" {
 
 variable "vm_domain" {
   type        = string
-  default     = ".pi.playground.net"
+  default     = ".wpc.playground.net"
   description = "Dominio usado para el nombre completo de las VMs."
 }
 
