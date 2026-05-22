@@ -1,3 +1,9 @@
 .terraform/*
+.templates/*
 terraform.tfvars.json
-*.tfstate*
+*.tfstate
+*.tfstate.*
+*.backup
+.backup
+
+*.backup
