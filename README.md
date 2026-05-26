@@ -1,4 +1,4 @@
-# auto-microasignaciones
+# Wetcom Labs
 
 ## Uso
 El siguiente paso a paso debe realizarse en una máquina virtual o física en la misma red del vCenter (o con acceso al mismo).
