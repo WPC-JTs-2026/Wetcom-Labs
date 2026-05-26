@@ -1,9 +1,26 @@
-.terraform/*
-.templates/*
-terraform.tfvars.json
-*.tfstate
-*.tfstate.*
-*.backup
-.backup
+# Global OS & Logs
+.DS_Store
+Thumbs.db
+*.log
+.env*.local
 
-*.backup
+# Frontend (Next.js & v0 sandbox)
+frontend/__v0_runtime_loader.js
+frontend/__v0_devtools.tsx
+frontend/__v0_jsx-dev-runtime.ts
+frontend/.snowflake/
+frontend/.v0-trash/
+frontend/.vercel/
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/build/
+
+# Terraform
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.backup
+terraform/*.tfvars
+terraform/*.tfvars.json
+terraform/tfplan
+terraform/.terraform.tfstate.lock.info
