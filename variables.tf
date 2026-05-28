@@ -71,18 +71,61 @@ variable "esxi_host_name" {
   description = "Escribe el nombre exacto del host ESXi (ej. esxi-01.playground.net):"
 }
 
-variable "iscsi_datastore_name" {
-  type        = string
-  description = "Escribe el nombre que le darás al Datastore (ej. ds-iscsi-01):"
-}
 
+# --- Datos de Conexión al Host ---
 variable "esxi_root_password" {
   type        = string
-  description = "Contraseña de root del host ESXi (para la conexión SSH):"
+  description = "Contraseña de root del ESXi (para SSH):"
   sensitive   = true
 }
 
+# --- Configuración de Red iSCSI ---
+variable "network_portgroup" {
+  type        = string
+  description = "Nombre del PortGroup de iSCSI (ej: IP Storage 1):"
+}
+
+variable "esxi_iscsi_ip" {
+  type        = string
+  description = "IP estática que tendrá el ESXi en la red iSCSI:"
+}
+
+variable "esxi_iscsi_netmask" {
+  type        = string
+  default     = "255.255.255.0"
+  description = "Máscara de subred para la VMkernel de iSCSI:"
+}
+
+variable "vmkernel_interface" {
+  type        = string
+  default     = "vmk1"
+  description = "Nombre de la interfaz VMkernel para iSCSI (ej: vmk1, vmk2):"
+}
+
+# --- Datos del TrueNAS ---
 variable "truenas_ip" {
   type        = string
-  description = "Escribe la IP de tu servidor TrueNAS:"
+  description = "IP del servidor TrueNAS (Portal iSCSI):"
+}
+
+variable "truenas_chap_user" {
+  type        = string
+  description = "Usuario CHAP configurado en TrueNAS:"
+}
+
+variable "truenas_chap_pass" {
+  type        = string
+  description = "Secreto CHAP configurado en TrueNAS:"
+  sensitive   = true
+}
+
+# --- Variables nuevas para el vSwitch ---
+variable "vswitch_name" {
+  type        = string
+  description = "Nombre del nuevo vSwitch a crear (ej: vSwitch-iSCSI):"
+}
+
+variable "vswitch_uplink" {
+  type        = string
+  description = "Nombre del adaptador físico a usar en el ESXi (ej: vmnic1 o vmnic2):"
 }
