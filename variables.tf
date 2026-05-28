@@ -65,3 +65,24 @@ variable "resource_pool_name" {
   type        = string
   description = "Nombre o ruta del Resource Pool asignado (ej: 'RP-Production' o 'Cluster01/Resources/RP-Tier1')"
 }
+
+variable "esxi_host_name" {
+  type        = string
+  description = "Escribe el nombre exacto del host ESXi (ej. esxi-01.playground.net):"
+}
+
+variable "iscsi_datastore_name" {
+  type        = string
+  description = "Escribe el nombre que le darás al Datastore (ej. ds-iscsi-01):"
+}
+
+variable "esxi_root_password" {
+  type        = string
+  description = "Contraseña de root del host ESXi (para la conexión SSH):"
+  sensitive   = true
+}
+
+variable "truenas_ip" {
+  type        = string
+  description = "Escribe la IP de tu servidor TrueNAS:"
+}
