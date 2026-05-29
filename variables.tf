@@ -98,7 +98,6 @@ variable "esxi_iscsi_netmask" {
 
 variable "vmkernel_interface" {
   type        = string
-  default     = "vmk1"
   description = "Nombre de la interfaz VMkernel para iSCSI (ej: vmk1, vmk2):"
 }
 

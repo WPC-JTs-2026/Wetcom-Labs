@@ -44,14 +44,14 @@ resource "null_resource" "configure_iscsi_esxi" {
       "esxcli network ip interface ipv4 set --interface-name='${var.vmkernel_interface}' --ipv4='${var.esxi_iscsi_ip}' --netmask='${var.esxi_iscsi_netmask}' --type=static",
 
       # 5. Network Port Binding: Forzar a que iSCSI use esta nueva IP
-      "esxcli iscsi networkportal add --nic '${var.vmkernel_interface}' --adapter=$(esxcli iscsi adapter list | grep 'Software iSCSI' | awk '{print $1}') || true",
+      "esxcli iscsi networkportal add --nic '${var.vmkernel_interface}' --adapter=$(esxcli iscsi adapter list | grep 'iscsi_vmk' | awk '{print $1}') || true",
 
       # 6. Configurar las credenciales CHAP para que TrueNAS te dé acceso sin mostrar la contraseña en logs
-      "esxcli iscsi adapter auth chap set --direction=uni --authname='${var.truenas_chap_user}' --secret=$(cat /tmp/.chap_secret) --level=required --adapter=$(esxcli iscsi adapter list | grep 'Software iSCSI' | awk '{print $1}')",
+      "esxcli iscsi adapter auth chap set --direction=uni --authname='${var.truenas_chap_user}' --secret=$(cat /tmp/.chap_secret) --level=required --adapter=$(esxcli iscsi adapter list | grep 'iscsi_vmk' | awk '{print $1}')",
 
       # 7. Apuntar al TrueNAS (Dynamic Discovery) y lanzar el escaneo de reclamación
-      "esxcli iscsi adapter discovery sendtarget add --address='${var.truenas_ip}' --adapter=$(esxcli iscsi adapter list | grep 'Software iSCSI' | awk '{print $1}') || true",
-
+      "esxcli iscsi adapter discovery sendtarget add --address='${var.truenas_ip}' --adapter=$(esxcli iscsi adapter list | grep 'iscsi_vmk' | awk '{print $1}') || true",
+      
       # Al escanear, el ESXi monta la LUN existente automáticamente sin reformatear
       "esxcli storage core adapter rescan --all"
     ]
