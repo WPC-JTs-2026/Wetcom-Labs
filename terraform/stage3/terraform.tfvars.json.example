@@ -1,0 +1,19 @@
+{
+  "vsphere_server": "10.106.3.200",
+  "vsphere_user": "administrator@vsphere.local",
+  "vsphere_password": "Wetcom01!",
+  "datacenter_name": "Datacenter-001",
+  "cluster_name": "Cluster-001",
+  "hosts_info": [
+    {
+      "user": "root",
+      "password": "Wetcom01!",
+      "address": "10.106.3.201"
+    },
+    {
+      "user": "root",
+      "password": "Wetcom01!",
+      "address": "10.106.3.202"
+    }
+  ]
+}

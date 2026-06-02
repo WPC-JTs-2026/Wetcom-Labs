@@ -17,10 +17,12 @@ frontend/out/
 frontend/build/
 
 # Terraform
-terraform/.terraform/
-terraform/*.tfstate
-terraform/*.tfstate.backup
-terraform/*.tfvars
-terraform/*.tfvars.json
-terraform/tfplan
-terraform/.terraform.tfstate.lock.info
+*.terraform/
+*.templates/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+*.tfvars.json
+*terraform/tfplan
+*.terraform.tfstate.lock.info
+*vcsa.json

@@ -1,3 +1,5 @@
+# Copied from main.tf (ESXi host deployment)
+
 locals {
   // Nombre de la red OVF definida en el descriptor de la OVA.
   // La Nested ESXi 8.0b Appliance utiliza "VM Network" como nombre de red.
@@ -16,7 +18,6 @@ resource "vsphere_virtual_machine" "WPC" {
   host_system_id = data.vsphere_host.host.id
 
   # Asignación de la ruta de la carpeta de destino (usando la variable directamente).
-  # El valor debe ser el subtree bajo /<datacenter>/vm, sin repetir /Playground/vm.
   folder = var.vm_folder_path
 
   datastore_id  = data.vsphere_datastore.datastore.id
@@ -37,7 +38,7 @@ resource "vsphere_virtual_machine" "WPC" {
     network_id = data.vsphere_network.network.id
   }
 
-  # Despliegue desde OVA local (no se clona una template de vSphere)
+  # Despliegue desde OVA local
   ovf_deploy {
     local_ovf_path    = var.ovf_local_path
     disk_provisioning = "thin"
@@ -45,6 +46,15 @@ resource "vsphere_virtual_machine" "WPC" {
     ovf_network_map = {
       (local.ovf_network_name) = data.vsphere_network.network.id
     }
+  }
+
+  # Disco único configurado mediante variables
+  disk {
+    label            = "disk1"
+    size             = var.esxi_disk_size_gb > 0 ? var.esxi_disk_size_gb : 20
+    thin_provisioned = true
+    unit_number      = 1
+    controller_type  = "nvme"
   }
 
   # Propiedades OVF (vApp) para configuración inicial del host ESXi
@@ -60,7 +70,7 @@ resource "vsphere_virtual_machine" "WPC" {
       "guestinfo.ntp"        = "1.pool.ntp.org"
       "guestinfo.password"   = var.esxi_password
       "guestinfo.ssh"        = var.esxi_ssh_enabled ? "True" : "False"
-      "guestinfo.createvmfs" = var.esxi_create_vmfs ? "True" : "False"
+      "guestinfo.createvmfs" = count.index == 0 ? "True" : (var.esxi_create_vmfs ? "True" : "False")
     }
   }
 

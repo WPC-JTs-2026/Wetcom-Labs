@@ -27,6 +27,7 @@ data "vsphere_resource_pool" "pool" {
 
 # Host físico requerido para ovf_deploy.
 # Se resuelve automáticamente el primer host del cluster si no se especifica.
+
 data "vsphere_host" "host" {
   name          = var.esxi_deploy_host
   datacenter_id = data.vsphere_datacenter.dc.id

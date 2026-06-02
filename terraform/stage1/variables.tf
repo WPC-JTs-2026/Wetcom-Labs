@@ -70,8 +70,6 @@ variable "esxi_deploy_host" {
   description = "FQDN o IP del host físico ESXi del cluster donde se desplegará la OVA (requerido para ovf_deploy)"
 }
 
-# ─── Configuración de hardware ESXi ──────────────────────────────────
-
 variable "esxi_cpu_count" {
   type        = number
   default     = 4
@@ -86,11 +84,9 @@ variable "esxi_memory_mb" {
 
 variable "esxi_disk_size_gb" {
   type        = number
-  default     = 0
-  description = "Tamaño del disco de boot en GB. Si se deja en 0, se usa el tamaño definido en la OVA (12 GB)."
+  default     = 40
+  description = "Tamaño del disco principal (único) en GB para cada ESXi (mínimo recomendado: 40 GB)"
 }
-
-# ─── Configuración de red ESXi ────────────────────────────────────────
 
 variable "esxi_ip_subnet" {
   type        = string
