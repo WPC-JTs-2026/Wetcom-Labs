@@ -1,0 +1,11 @@
+{
+  "esxi_deploy_host": "10.106.3.201",
+  "esxi_password": "Wetcom01!",
+  "vcsa_netmask": "255.255.255.0",
+  "vcsa_gateway": "10.106.3.1",
+  "vcsa_dns": "192.168.112.30",
+  "vcsa_ip": "10.106.3.200",
+  "vcsa_fqdn": "10.106.3.200",
+  "vcsa_password": "Wetcom01!",
+  "vcsa_exctract_path": "/home/wpc/vcsa_iso_extract"
+}
