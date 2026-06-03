@@ -6,10 +6,10 @@ locals {
   ovf_network_name = "VM Network"
 }
 
-resource "vsphere_virtual_machine" "WPC" {
-  count = var.vm_count
+resource "vsphere_virtual_machine" "esxi_vms" {
+  count = var.esxi_count
 
-  name = "${var.vm_name_prefix}${format("%02d", count.index + 1)}${var.vm_domain}"
+  name = "${var.esxi_name_prefix}${format("%02d", count.index + 1)}${var.vm_domain}"
 
   # Asignación del ID del Resource Pool validado
   resource_pool_id = data.vsphere_resource_pool.pool.id
@@ -40,7 +40,7 @@ resource "vsphere_virtual_machine" "WPC" {
 
   # Despliegue desde OVA local
   ovf_deploy {
-    local_ovf_path    = var.ovf_local_path
+    local_ovf_path    = var.esxi_ovf_local_path
     disk_provisioning = "thin"
 
     ovf_network_map = {
@@ -61,7 +61,7 @@ resource "vsphere_virtual_machine" "WPC" {
   # La Nested ESXi OVA de William Lam soporta configuración via guestinfo.*
   vapp {
     properties = {
-      "guestinfo.hostname"   = "${var.vm_name_prefix}${format("%02d", count.index + 1)}"
+      "guestinfo.hostname"   = "${var.esxi_name_prefix}${format("%02d", count.index + 1)}"
       "guestinfo.ipaddress"  = "${var.esxi_ip_subnet}.${var.esxi_ip_start_offset + count.index}"
       "guestinfo.netmask"    = var.esxi_netmask
       "guestinfo.gateway"    = var.esxi_gateway
@@ -82,5 +82,48 @@ resource "vsphere_virtual_machine" "WPC" {
       # Ignorar cambios en ovf_deploy ya que solo se usa en la creación.
       ovf_deploy,
     ]
+  }
+}
+
+resource "vsphere_virtual_machine" "truenas_vm" {
+  name             = "${var.truenas_vm_prefix}${var.vm_domain}"
+  resource_pool_id = data.vsphere_resource_pool.pool.id
+  folder           = var.vm_folder_path
+  datastore_id     = data.vsphere_datastore.datastore.id
+
+  num_cpus = var.truenas_vm_cpus
+  memory   = var.truenas_vm_memory
+  
+  # Parche de seguridad para el plan interactivo
+  guest_id = data.vsphere_virtual_machine.truenas_template.guest_id != "" ? data.vsphere_virtual_machine.truenas_template.guest_id : "ubuntu64Guest"
+
+  network_interface {
+    network_id   = data.vsphere_network.network.id
+    adapter_type = data.vsphere_virtual_machine.truenas_template.network_interface_types[0]
+  }
+
+  dynamic "disk" {
+    for_each = data.vsphere_virtual_machine.truenas_template.disks
+    content {
+      label            = "disk${disk.key}"
+      size             = disk.value.size
+      thin_provisioned = disk.value.thin_provisioned
+      unit_number      = disk.key
+    }
+  }
+
+  clone {
+    template_uuid = data.vsphere_virtual_machine.truenas_template.id
+    customize {
+      linux_options {
+        host_name = var.truenas_vm_prefix
+        domain    = trimprefix(var.vm_domain, ".")
+      }
+      network_interface {
+        ipv4_address = var.truenas_vm_ip
+        ipv4_netmask = var.truenas_vm_netmask
+      }
+      ipv4_gateway = var.truenas_vm_gateway
+    }
   }
 }

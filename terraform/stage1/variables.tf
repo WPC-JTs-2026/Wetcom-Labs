@@ -1,3 +1,5 @@
+# # # VARIABLES VSPHERE (PLAYGOURND) # # #
+
 variable "vsphere_server" {
   type        = string
   description = "FQDN o dirección IP del vCenter Server en VCF"
@@ -34,22 +36,6 @@ variable "network_name" {
   description = "Nombre del port group o segmento NSX-T"
 }
 
-variable "ovf_local_path" {
-  type        = string
-  description = "Ruta local al archivo OVA/OVF de la template ESXi Nested (relativa al directorio de trabajo)"
-}
-
-variable "vm_count" {
-  type        = number
-  default     = 2
-  description = "Cantidad de instancias ESXi idénticas a desplegar"
-}
-
-variable "vm_name_prefix" {
-  type        = string
-  description = "Prefijo de nombre para cada VM. Si no se define, Terraform pedirá el valor por consola."
-}
-
 variable "vm_domain" {
   type        = string
   description = "Dominio usado para el nombre completo de las VMs y configuración DNS de ESXi."
@@ -63,6 +49,24 @@ variable "vm_folder_path" {
 variable "resource_pool_name" {
   type        = string
   description = "Nombre o ruta del Resource Pool asignado (ej: 'RP-Production' o 'Cluster01/Resources/RP-Tier1')"
+}
+
+# # # VARIABLES ESXI NESTED # # #
+
+variable "esxi_ovf_local_path" {
+  type        = string
+  description = "Ruta local al archivo OVA/OVF de la template ESXi Nested (relativa al directorio de trabajo)"
+}
+
+variable "esxi_count" {
+  type        = number
+  default     = 2
+  description = "Cantidad de instancias ESXi idénticas a desplegar"
+}
+
+variable "esxi_name_prefix" {
+  type        = string
+  description = "Prefijo de nombre para cada VM. Si no se define, Terraform pedirá el valor por consola."
 }
 
 variable "esxi_deploy_host" {
@@ -135,4 +139,44 @@ variable "esxi_create_vmfs" {
   type        = bool
   default     = false
   description = "Crear automáticamente un datastore VMFS local (datastore1) en cada ESXi"
+}
+
+# # # VARIABLES TRUENAS # # #
+
+variable "truenas_template_name" {
+  type        = string
+  description = "Nombre de la template de TrueNAS en el inventario de vSphere"
+}
+
+variable "truenas_vm_prefix" {
+  type        = string
+  description = "Nombre base para la VM de TrueNAS. Se le agregará el dominio definido en vm_domain."
+}
+
+variable "truenas_vm_cpus" {
+  type        = number
+  default     = 2
+  description = "Cantidad de vCPUs para la VM de TrueNAS. Si se deja en 0, se usará el valor definido en la template."
+}
+
+variable "truenas_vm_memory" {
+  type        = number
+  default     = 8192
+  description = "Memoria RAM en MB para la VM de TrueNAS. Si se deja en 0, se usará el valor definido en la template."
+}
+
+variable "truenas_vm_ip" {
+  type        = string
+  description = "Dirección IP estática para la VM de TrueNAS"
+}
+
+variable "truenas_vm_netmask" {
+  type        = number
+  default     = 24
+  description = "Máscara de red para la VM de TrueNAS"
+}
+
+variable "truenas_vm_gateway" {
+  type        = string
+  default     = "Gateway para la VM de TrueNAS"
 }
