@@ -38,23 +38,39 @@ resource "vsphere_virtual_machine" "esxi_vms" {
     network_id = data.vsphere_network.network.id
   }
 
+  network_interface {
+    network_id = data.vsphere_network.network.id
+  }
+
+  network_interface {
+    network_id = data.vsphere_network.network.id
+  }
+
+  network_interface {
+    network_id = data.vsphere_network.network.id
+  }
+
   # Despliegue desde OVA local
   ovf_deploy {
     local_ovf_path    = var.esxi_ovf_local_path
     disk_provisioning = "thin"
+    enable_hidden_properties = true
 
     ovf_network_map = {
       (local.ovf_network_name) = data.vsphere_network.network.id
     }
   }
 
-  # Disco único configurado mediante variables
-  disk {
-    label            = "disk1"
-    size             = var.esxi_disk_size_gb > 0 ? var.esxi_disk_size_gb : 20
-    thin_provisioned = true
-    unit_number      = 1
-    controller_type  = "nvme"
+  # Disco adicional configurado mediante variables (solo en el primer host)
+  dynamic "disk" {
+    for_each = count.index == 0 ? [1] : []
+    content {
+      label            = "disk1"
+      size             = var.esxi_disk_size_gb > 0 ? var.esxi_disk_size_gb : 200
+      thin_provisioned = true
+      unit_number      = 1
+      controller_type  = "nvme"
+    }
   }
 
   # Propiedades OVF (vApp) para configuración inicial del host ESXi
