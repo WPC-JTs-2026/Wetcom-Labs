@@ -25,6 +25,7 @@
   "esxi_password": "Wetcom01!",
   "esxi_ssh_enabled": true,
   
+  "deploy_truenas": true,
   "truenas_template_name": "truenas-template.playground.net",
   "truenas_vm_prefix": "truenas-lab",
   "truenas_vm_cpus": 2,
