@@ -81,18 +81,24 @@ resource "null_resource" "deploy_vcsa" {
 
       # Esperar a que el host ESXi responda antes de intentar la instalación
       IPDestino="${var.esxi_deploy_host}"
-        PuertoSSH=22
+      PuertoSSH=22
       SegundosEspera=10
-        echo "Esperando a que el host ESXi $IPDestino acepte conexiones en el puerto SSH..."
-        while true; do
-          if timeout 5 bash -c ">/dev/tcp/$IPDestino/$PuertoSSH" >/dev/null 2>&1; then
-            echo "[OK] ¡El equipo $IPDestino acepta conexiones en el puerto $PuertoSSH!"
-            break
-          fi
-          TiempoActual="$(date +%H:%M:%S)"
-          echo "[$TiempoActual] Sin respuesta en puerto $PuertoSSH de $IPDestino. Reintentando en $SegundosEspera segundos..."
-          sleep "$SegundosEspera"
-        done
+      Comienzo="$(date +%s)"
+      echo "Esperando a que el host ESXi $IPDestino acepte conexiones en el puerto SSH..."
+      while true; do
+        if timeout 5 bash -c ">/dev/tcp/$IPDestino/$PuertoSSH" >/dev/null 2>&1; then
+          echo "[OK] ¡El equipo $IPDestino acepta conexiones en el puerto $PuertoSSH!"
+          break
+        fi
+        TiempoActual="$(date +%s)"
+        if [ TiempoActual - Comienzo -ge 180 ]; then
+          echo "Tiempo de espera agotado. El host ESXi $IPDestino no respondió en el puerto SSH después de 3 minutos."
+          exit 1
+        fi
+        TiempoActual="$(date +%H:%M:%S)"
+        echo "[$TiempoActual] Sin respuesta en puerto $PuertoSSH de $IPDestino. Reintentando en $SegundosEspera segundos..."
+        sleep "$SegundosEspera"
+      done
 
       echo "Ejecutando instalador en $installerPath ..."
       "$installerPath" install --no-ssl-certificate-verification --no-esx-ssl-verify --accept-eula --acknowledge-ceip "$jsonPath"
