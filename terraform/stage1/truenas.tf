@@ -1,5 +1,5 @@
 resource "vsphere_virtual_machine" "truenas_vm" {
-  count = var.deploy_truneas ? 1 : 0
+  count = var.deploy_truenas ? 1 : 0
 
   name             = "${var.truenas_vm_prefix}${var.vm_domain}"
   resource_pool_id = data.vsphere_resource_pool.pool.id

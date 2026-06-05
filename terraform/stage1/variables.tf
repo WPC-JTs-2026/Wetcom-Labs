@@ -143,7 +143,7 @@ variable "esxi_create_vmfs" {
 
 # # # VARIABLES TRUENAS # # #
 
-variable "deploy_truneas" {
+variable "deploy_truenas" {
   type        = bool
   default     = true
   description = "Habilitar despliegue de VM de TrueNAS"
