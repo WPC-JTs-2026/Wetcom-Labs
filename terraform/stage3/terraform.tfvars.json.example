@@ -15,5 +15,32 @@
       "password": "Wetcom01!",
       "address": "10.106.3.202"
     }
-  ]
+  ],
+
+
+  "iscsi_enabled": true,
+  "truenas_ip": "10.106.3.150",
+  "truenas_chap_user": "iscsi_user",
+  "truenas_chap_pass": "SecureChapPass123!",
+  "vswitch_name": "vSwitch-Storage",
+  "vswitch_uplink": "vmnic1",
+  "network_portgroup": "PortGroup-iSCSI",
+  "vmkernel_interface": "vmk1",
+  "iscsi_network_config": [
+    {
+      "host_address": "10.106.3.201",
+      "iscsi_ip": "10.106.3.203",
+      "iscsi_netmask": "255.255.255.0"
+    },
+    {
+      "host_address": "10.106.3.202",
+      "iscsi_ip": "10.106.3.204",
+      "iscsi_netmask": "255.255.255.0"
+    }
+  ],
+
+  "nfs_enabled": true,
+  "nfs_datastore_name":"TrueNAS-NFS-DS",
+  "nfs_remote_path": "/mnt/pool-almacenamiento",
+  "nfs_access_mode": "readWrite"
 }

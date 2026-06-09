@@ -6,10 +6,14 @@ locals {
   ovf_network_name = "VM Network"
 }
 
-resource "vsphere_virtual_machine" "WPC" {
-  count = var.vm_count
+locals {
+  esxi_host_ips = [for host in var.esxi_hosts_info : host.address]
+}
 
-  name = "${var.vm_name_prefix}${format("%02d", count.index + 1)}${var.vm_domain}"
+resource "vsphere_virtual_machine" "esxi_vms" {
+  count = length(local.esxi_host_ips)
+
+  name = "${var.esxi_name_prefix}${format("%02d", count.index + 1)}${var.vm_domain}"
 
   # Asignación del ID del Resource Pool validado
   resource_pool_id = data.vsphere_resource_pool.pool.id
@@ -38,31 +42,47 @@ resource "vsphere_virtual_machine" "WPC" {
     network_id = data.vsphere_network.network.id
   }
 
+  network_interface {
+    network_id = data.vsphere_network.network.id
+  }
+
+  network_interface {
+    network_id = data.vsphere_network.network.id
+  }
+
+  network_interface {
+    network_id = data.vsphere_network.network.id
+  }
+
   # Despliegue desde OVA local
   ovf_deploy {
-    local_ovf_path    = var.ovf_local_path
-    disk_provisioning = "thin"
+    local_ovf_path           = var.esxi_ovf_local_path
+    disk_provisioning        = "thin"
+    enable_hidden_properties = true
 
     ovf_network_map = {
       (local.ovf_network_name) = data.vsphere_network.network.id
     }
   }
 
-  # Disco único configurado mediante variables
-  disk {
-    label            = "disk1"
-    size             = var.esxi_disk_size_gb > 0 ? var.esxi_disk_size_gb : 20
-    thin_provisioned = true
-    unit_number      = 1
-    controller_type  = "nvme"
+  # Disco adicional configurado mediante variables (solo en el primer host)
+  dynamic "disk" {
+    for_each = count.index == 0 ? [1] : []
+    content {
+      label            = "disk1"
+      size             = var.esxi_disk_size_gb > 0 ? var.esxi_disk_size_gb : 200
+      thin_provisioned = true
+      unit_number      = 1
+      controller_type  = "nvme"
+    }
   }
 
   # Propiedades OVF (vApp) para configuración inicial del host ESXi
   # La Nested ESXi OVA de William Lam soporta configuración via guestinfo.*
   vapp {
     properties = {
-      "guestinfo.hostname"   = "${var.vm_name_prefix}${format("%02d", count.index + 1)}"
-      "guestinfo.ipaddress"  = "${var.esxi_ip_subnet}.${var.esxi_ip_start_offset + count.index}"
+      "guestinfo.hostname"   = "${var.esxi_name_prefix}${format("%02d", count.index + 1)}"
+      "guestinfo.ipaddress"  = local.esxi_host_ips[count.index]
       "guestinfo.netmask"    = var.esxi_netmask
       "guestinfo.gateway"    = var.esxi_gateway
       "guestinfo.dns"        = var.esxi_dns
