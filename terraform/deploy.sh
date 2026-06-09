@@ -20,15 +20,19 @@ RETRY_DELAY=30
 
 # Locate paths relative to script location
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PARENT_DIR="$(dirname "${ROOT_DIR}")"
 GLOBAL_VARS_PATH="${ROOT_DIR}/${GLOBAL_VARS_NAME}"
-GENERATE_SCRIPT_PATH="${PARENT_DIR}/${GENERATE_SCRIPT}"
+GENERATE_SCRIPT_PATH="${ROOT_DIR}/${GENERATE_SCRIPT}"
 
 # ==========================================
 # Initial Validation
 # ==========================================
 if [ ! -f "${GLOBAL_VARS_PATH}" ]; then
   echo "ERROR: Global variables file not found at: ${GLOBAL_VARS_PATH}"
+  exit 1
+fi
+
+if [ ! -f "${GENERATE_SCRIPT_PATH}" ]; then
+  echo "ERROR: Generator script generate_tfvars.py not found at: ${GENERATE_SCRIPT_PATH}"
   exit 1
 fi
 

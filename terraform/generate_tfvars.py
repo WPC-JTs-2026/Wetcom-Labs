@@ -12,8 +12,8 @@ import json
 import re
 from typing import Dict, Any, Set, Callable, Union
 
-# Default paths relative to the project root
-DEFAULT_GLOBAL_TFVARS_PATH = "terraform/global.tfvars.json"
+# Default paths relative to the terraform/ directory
+DEFAULT_GLOBAL_TFVARS_PATH = "global.tfvars.json"
 STAGES = ["stage1", "stage2", "stage3"]
 
 # Dictionaries at the top of the file mapping TF variables to global keys or custom loaders
@@ -52,7 +52,7 @@ STAGE1_MAPPING: Dict[str, Union[str, Callable[[Dict[str, Any]], Any]]] = {
 }
 
 STAGE2_MAPPING: Dict[str, Union[str, Callable[[Dict[str, Any]], Any]]] = {
-    "esxi_deploy_host": "esxi_hosts.esxi_deploy_host",
+    "esxi_deploy_host": lambda g: g.get("esxi_hosts", {}).get("info", [{}])[0].get("address"),
     "esxi_password": "esxi_hosts.password",
     "vcsa_netmask": "nested_vcenter.vcsa_netmask",
     "vcsa_gateway": "nested_vcenter.vcsa_gateway",
@@ -237,7 +237,6 @@ def main() -> None:
             global_vars_path = sys.argv[1]
             
     if not os.path.isfile(global_vars_path):
-        # Check if we can find it relative to current working directory or script root
         script_dir = os.path.dirname(os.path.abspath(__file__))
         alternative_path = os.path.join(script_dir, global_vars_path)
         if os.path.isfile(alternative_path):
@@ -254,12 +253,13 @@ def main() -> None:
         sys.exit(1)
         
     script_dir = os.path.dirname(os.path.abspath(__file__))
+    terraform_dir = script_dir
     
     stages_to_process = [stage_filter] if stage_filter else STAGES
     
     for stage in stages_to_process:
-        variables_tf = os.path.join(script_dir, "terraform", stage, "variables.tf")
-        output_json = os.path.join(script_dir, "terraform", stage, "terraform.tfvars.json")
+        variables_tf = os.path.join(terraform_dir, stage, "variables.tf")
+        output_json = os.path.join(terraform_dir, stage, "terraform.tfvars.json")
         
         try:
             generate_stage_tfvars(stage, global_vars, variables_tf, output_json)

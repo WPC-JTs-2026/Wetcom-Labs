@@ -91,7 +91,7 @@ resource "null_resource" "deploy_vcsa" {
           break
         fi
         TiempoActual="$(date +%s)"
-        if [ TiempoActual - Comienzo -ge 180 ]; then
+        if [ $((TiempoActual - Comienzo)) -ge 180 ]; then
           echo "Tiempo de espera agotado. El host ESXi $IPDestino no respondió en el puerto SSH después de 3 minutos."
           exit 1
         fi
