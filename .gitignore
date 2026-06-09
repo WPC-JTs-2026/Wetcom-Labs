@@ -26,3 +26,5 @@ frontend/build/
 *terraform/tfplan
 *.terraform.tfstate.lock.info
 *vcsa.json
+
+*__pycache__
