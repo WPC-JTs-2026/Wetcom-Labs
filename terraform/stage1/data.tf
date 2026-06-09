@@ -32,3 +32,8 @@ data "vsphere_host" "host" {
   name          = var.esxi_deploy_host
   datacenter_id = data.vsphere_datacenter.dc.id
 }
+
+data "vsphere_virtual_machine" "truenas_template" {
+  name          = var.truenas_template_name
+  datacenter_id = data.vsphere_datacenter.dc.id
+}
