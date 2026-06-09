@@ -6,8 +6,12 @@ locals {
   ovf_network_name = "VM Network"
 }
 
+locals {
+  esxi_host_ips = [for host in var.esxi_hosts_info : host.address]
+}
+
 resource "vsphere_virtual_machine" "esxi_vms" {
-  count = var.esxi_count
+  count = length(local.esxi_host_ips)
 
   name = "${var.esxi_name_prefix}${format("%02d", count.index + 1)}${var.vm_domain}"
 
@@ -52,8 +56,8 @@ resource "vsphere_virtual_machine" "esxi_vms" {
 
   # Despliegue desde OVA local
   ovf_deploy {
-    local_ovf_path    = var.esxi_ovf_local_path
-    disk_provisioning = "thin"
+    local_ovf_path           = var.esxi_ovf_local_path
+    disk_provisioning        = "thin"
     enable_hidden_properties = true
 
     ovf_network_map = {
@@ -78,7 +82,7 @@ resource "vsphere_virtual_machine" "esxi_vms" {
   vapp {
     properties = {
       "guestinfo.hostname"   = "${var.esxi_name_prefix}${format("%02d", count.index + 1)}"
-      "guestinfo.ipaddress"  = "${var.esxi_ip_subnet}.${var.esxi_ip_start_offset + count.index}"
+      "guestinfo.ipaddress"  = local.esxi_host_ips[count.index]
       "guestinfo.netmask"    = var.esxi_netmask
       "guestinfo.gateway"    = var.esxi_gateway
       "guestinfo.dns"        = var.esxi_dns

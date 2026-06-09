@@ -12,13 +12,19 @@
 
   "esxi_ovf_local_path": ".templates/wpc-esxi-8u3-template.ova",
   "esxi_deploy_host": "esxi-04.playground.net",
-  "esxi_count": 2,
   "esxi_name_prefix": "tf-esxi",
-  "esxi_cpu_count": 4,
-  "esxi_memory_mb": 8192,
-  "esxi_disk_size_gb": 200,
-  "esxi_ip_start_offset": 201,
-  "esxi_ip_subnet": "10.106.3",
+  "esxi_hosts_info": [
+    {
+      "user": "root",
+      "password": "Wetcom01!",
+      "address": "10.106.3.201"
+    },
+    {
+      "user": "root",
+      "password": "Wetcom01!",
+      "address": "10.106.3.202"
+    }
+  ],
   "esxi_netmask": "255.255.255.0",
   "esxi_gateway": "10.106.3.1",
   "esxi_dns": "10.106.3.1",
@@ -28,8 +34,6 @@
   "deploy_truenas": true,
   "truenas_template_name": "truenas-template.playground.net",
   "truenas_vm_prefix": "truenas-lab",
-  "truenas_vm_cpus": 2,
-  "truenas_vm_memory": 8192,
   "truenas_vm_ip": "10.106.3.210",
   "truenas_vm_netmask": 24,
   "truenas_vm_gateway": "10.106.3.1"

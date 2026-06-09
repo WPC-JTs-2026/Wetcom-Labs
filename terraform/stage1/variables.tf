@@ -58,12 +58,6 @@ variable "esxi_ovf_local_path" {
   description = "Ruta local al archivo OVA/OVF de la template ESXi Nested (relativa al directorio de trabajo)"
 }
 
-variable "esxi_count" {
-  type        = number
-  default     = 2
-  description = "Cantidad de instancias ESXi idénticas a desplegar"
-}
-
 variable "esxi_name_prefix" {
   type        = string
   description = "Prefijo de nombre para cada VM. Si no se define, Terraform pedirá el valor por consola."
@@ -74,6 +68,20 @@ variable "esxi_deploy_host" {
   description = "FQDN o IP del host físico ESXi del cluster donde se desplegará la OVA (requerido para ovf_deploy)"
 }
 
+variable "esxi_hosts_info" {
+  type = list(object({
+    user     = string
+    password = string
+    address  = string
+  }))
+  description = "Lista de hosts ESXi con IP y credenciales. Se requiere para desplegar stage1."
+
+  validation {
+    condition     = length(var.esxi_hosts_info) > 0
+    error_message = "esxi_hosts_info debe contener al menos un host ESXi para stage1."
+  }
+}
+
 variable "esxi_cpu_count" {
   type        = number
   default     = 4
@@ -82,26 +90,14 @@ variable "esxi_cpu_count" {
 
 variable "esxi_memory_mb" {
   type        = number
-  default     = 8192
+  default     = 24576
   description = "Memoria RAM en MB para cada VM ESXi Nested (mínimo recomendado: 8192)"
 }
 
 variable "esxi_disk_size_gb" {
   type        = number
-  default     = 40
-  description = "Tamaño del disco principal (único) en GB para cada ESXi (mínimo recomendado: 40 GB)"
-}
-
-variable "esxi_ip_subnet" {
-  type        = string
-  default     = "10.106.3"
-  description = "Primeros 3 octetos de la subred para las VMs ESXi (ej: '10.106.3')"
-}
-
-variable "esxi_ip_start_offset" {
-  type        = number
-  default     = 150
-  description = "Último octeto de la IP de la primera VM ESXi. Las siguientes se asignan secuencialmente (+1, +2, etc.)"
+  default     = 200
+  description = "Tamaño del disco donde se instalará vCenter (en un único host)"
 }
 
 variable "esxi_netmask" {
@@ -183,6 +179,6 @@ variable "truenas_vm_netmask" {
 }
 
 variable "truenas_vm_gateway" {
-  type        = string
-  default     = "Gateway para la VM de TrueNAS"
+  type    = string
+  default = "10.106.3.1"
 }

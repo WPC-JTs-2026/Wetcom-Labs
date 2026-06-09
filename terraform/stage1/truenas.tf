@@ -8,7 +8,7 @@ resource "vsphere_virtual_machine" "truenas_vm" {
 
   num_cpus = var.truenas_vm_cpus
   memory   = var.truenas_vm_memory
-  
+
   # Parche de seguridad para el plan interactivo
   guest_id = data.vsphere_virtual_machine.truenas_template.guest_id != "" ? data.vsphere_virtual_machine.truenas_template.guest_id : "ubuntu64Guest"
 

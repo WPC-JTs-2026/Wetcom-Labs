@@ -18,11 +18,13 @@ variable "vsphere_password" {
 
 variable "datacenter_name" {
   type        = string
+  default     = "Datacenter-001"
   description = "Nombre del objeto Datacenter en vSphere"
 }
 
 variable "cluster_name" {
   type        = string
+  default     = "Cluster-001"
   description = "Nombre del Compute Cluster en vSphere"
 }
 
