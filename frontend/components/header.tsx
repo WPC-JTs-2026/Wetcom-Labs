@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
+import { SettingsModal } from "@/components/settings-modal"
 
 const navigation = [
   { name: "Milestones", href: "/" },
@@ -32,23 +33,28 @@ export function Header() {
             </span>
           </Link>
         </div>
-        <nav className="flex items-center gap-1">
-          {navigation.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "px-3 py-2 text-sm font-medium rounded-md transition-colors",
-                pathname === item.href
-                  ? "bg-primary/10 text-primary"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
-              )}
-            >
-              {item.name}
-            </Link>
-          ))}
-        </nav>
+        <div className="flex items-center gap-4">
+          <nav className="flex items-center gap-1">
+            {navigation.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "px-3 py-2 text-sm font-medium rounded-md transition-colors",
+                  pathname === item.href
+                    ? "bg-primary/10 text-primary"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                )}
+              >
+                {item.name}
+              </Link>
+            ))}
+          </nav>
+          <div className="h-4 w-px bg-border" />
+          <SettingsModal />
+        </div>
       </div>
     </header>
   )
 }
+

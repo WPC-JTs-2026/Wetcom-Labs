@@ -52,7 +52,7 @@ resource "vsphere_virtual_machine" "esxi_vms" {
 
   # Despliegue desde OVA local
   ovf_deploy {
-    local_ovf_path    = var.esxi_ovf_local_path
+    local_ovf_path    = "${path.module}/.templates/wpc-esxi-8u3-template.ova"
     disk_provisioning = "thin"
     enable_hidden_properties = true
 
@@ -69,7 +69,7 @@ resource "vsphere_virtual_machine" "esxi_vms" {
       size             = var.esxi_disk_size_gb > 0 ? var.esxi_disk_size_gb : 200
       thin_provisioned = true
       unit_number      = 1
-      controller_type  = "nvme"
+      controller_type  = "scsi"
     }
   }
 

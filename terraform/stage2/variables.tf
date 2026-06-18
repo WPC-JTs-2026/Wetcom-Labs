@@ -41,7 +41,3 @@ variable "vcsa_password" {
   description = "Password de root y administrator@vsphere.local del nuevo vCenter"
 }
 
-variable "vcsa_exctract_path" {
-  type        = string
-  description = "Ruta absoluta a la carpeta donde se extrajo la ISO de instalación de vCenter"
-}

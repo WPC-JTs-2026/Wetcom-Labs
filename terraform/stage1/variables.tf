@@ -53,10 +53,7 @@ variable "resource_pool_name" {
 
 # # # VARIABLES ESXI NESTED # # #
 
-variable "esxi_ovf_local_path" {
-  type        = string
-  description = "Ruta local al archivo OVA/OVF de la template ESXi Nested (relativa al directorio de trabajo)"
-}
+
 
 variable "esxi_count" {
   type        = number

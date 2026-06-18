@@ -11,6 +11,8 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Badge } from "@/components/ui/badge"
 import { Textarea } from "@/components/ui/textarea"
 import { Spinner } from "@/components/ui/spinner"
+import { DeploymentTerminal } from "@/components/deployment-terminal"
+
 import {
   Select,
   SelectContent,
@@ -536,8 +538,8 @@ function WindowsServerCard({
 
 export function CustomDeploymentForm() {
   const [config, setConfig] = useState<CustomDeploymentConfig>(createDefaultConfig())
-  const [isDeploying, setIsDeploying] = useState(false)
-  const [deployed, setDeployed] = useState(false)
+  const [terminalOpen, setTerminalOpen] = useState(false)
+
 
   const updateConfig = <K extends keyof CustomDeploymentConfig>(
     key: K,
@@ -609,11 +611,8 @@ export function CustomDeploymentForm() {
     config.esxiHosts.reduce((sum, h) => sum + calculateHostStorage(h), 0) +
     (config.truenas.enabled ? config.truenas.storage : 0)
 
-  const handleDeploy = async () => {
-    setIsDeploying(true)
-    await new Promise((resolve) => setTimeout(resolve, 3000))
-    setIsDeploying(false)
-    setDeployed(true)
+  const handleDeploy = () => {
+    setTerminalOpen(true)
   }
 
   const isValid = config.name.trim() !== "" && config.esxiHosts.length > 0
@@ -924,21 +923,20 @@ export function CustomDeploymentForm() {
         <Button
           size="lg"
           onClick={handleDeploy}
-          disabled={isDeploying || deployed || !isValid}
+          disabled={!isValid}
           className="min-w-[200px]"
         >
-          {isDeploying ? (
-            <>
-              <Spinner className="mr-2 h-4 w-4" />
-              Desplegando...
-            </>
-          ) : deployed ? (
-            "Entorno Desplegado"
-          ) : (
-            "Desplegar Entorno"
-          )}
+          Desplegar Entorno
         </Button>
       </div>
+
+      <DeploymentTerminal
+        open={terminalOpen}
+        onOpenChange={setTerminalOpen}
+        milestoneId="custom"
+        milestoneTitle={`Despliegue Personalizado: ${config.name}`}
+        customConfig={config}
+      />
     </div>
   )
 }

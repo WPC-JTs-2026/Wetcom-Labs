@@ -13,6 +13,7 @@ import {
   ChevronUp
 } from "lucide-react"
 import type { Milestone } from "@/lib/environments"
+import { DeploymentTerminal } from "@/components/deployment-terminal"
 
 interface MilestoneItemProps {
   milestone: Milestone
@@ -20,17 +21,13 @@ interface MilestoneItemProps {
 }
 
 export function MilestoneItem({ milestone, phaseNumber }: MilestoneItemProps) {
-  const [isDeploying, setIsDeploying] = useState(false)
-  const [isDeployed, setIsDeployed] = useState(false)
+  const [terminalOpen, setTerminalOpen] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
 
-  const handleDeploy = async () => {
-    setIsDeploying(true)
-    // Simular despliegue - aqui ira la logica real
-    await new Promise((resolve) => setTimeout(resolve, 2500))
-    setIsDeploying(false)
-    setIsDeployed(true)
+  const handleDeploy = () => {
+    setTerminalOpen(true)
   }
+
 
   return (
     <div className="border rounded-lg bg-card transition-all hover:border-primary/40">
@@ -96,25 +93,10 @@ export function MilestoneItem({ milestone, phaseNumber }: MilestoneItemProps) {
           <Button
             size="sm"
             onClick={handleDeploy}
-            disabled={isDeploying || isDeployed}
             className="min-w-[140px]"
           >
-            {isDeploying ? (
-              <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Desplegando...
-              </>
-            ) : isDeployed ? (
-              <>
-                <CheckCircle2 className="h-4 w-4 mr-2" />
-                Listo
-              </>
-            ) : (
-              <>
-                <Rocket className="h-4 w-4 mr-2" />
-                Desplegar
-              </>
-            )}
+            <Rocket className="h-4 w-4 mr-2" />
+            Desplegar
           </Button>
         </div>
       </div>
@@ -160,6 +142,14 @@ export function MilestoneItem({ milestone, phaseNumber }: MilestoneItemProps) {
           </div>
         </div>
       )}
+
+      <DeploymentTerminal
+        open={terminalOpen}
+        onOpenChange={setTerminalOpen}
+        milestoneId={milestone.id}
+        milestoneTitle={milestone.title}
+      />
     </div>
   )
 }
+
