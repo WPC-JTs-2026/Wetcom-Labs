@@ -60,13 +60,10 @@ async function run() {
     const vmRes = await request('GET', '/api/vcenter/vm', {
       'vmware-api-session-id': token
     });
-
-    console.log("Triggering reset on vm-11655...");
-    const resetRes = await request('POST', '/api/vcenter/vm/vm-11655/action/reset', {
-      'vmware-api-session-id': token
-    });
-
-    console.log("Reset result:", resetRes.statusCode || "Done");
+    const vms = JSON.parse(vmRes.body);
+    console.log(`Found ${vms.length} VMs.`);
+    const nested = vms.filter(v => v.name.includes("tf-esxi") || v.name.includes("vcsa") || v.name.includes("truenas"));
+    nested.forEach(v => console.log(`- ${v.name} (${v.vm}): ${v.power_state}`));
   } catch (err) {
     console.error("Error:", err.message);
   }

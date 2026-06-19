@@ -74,8 +74,8 @@ function waitPort(host, port, timeoutMs) {
 }
 
 async function run() {
-  // Wait for ESXi SSH port (3 minutes timeout)
-  await waitPort(ipDestino, 22, 180000);
+  // Wait for ESXi HTTPS port (3 minutes timeout)
+  await waitPort(ipDestino, 443, 180000);
 
   // Set Linux specific permissions
   if (!isWin) {
