@@ -95,6 +95,18 @@ variable "iscsi_network_config" {
   description = "Configuración de red iSCSI por host. Campos: host_address, iscsi_ip, iscsi_netmask"
 }
 
+variable "iscsi_datastore_name" {
+  type        = string
+  default     = "iSCSI-Datastore"
+  description = "Nombre con el que aparecerá el Datastore VMFS iSCSI en el vCenter destino"
+}
+
+variable "iscsi_disk_canonical_name" {
+  type        = string
+  default     = "naa.6589cfc000000826a62c1e87e0f4b533"
+  description = "Canonical name (NAA) del LUN iSCSI detectado en el ESXi."
+}
+
 
 # # # VARIABLES NFS # # #
 
@@ -106,6 +118,7 @@ variable "nfs_enabled" {
 
 variable "nfs_datastore_name" {
   type        = string
+  default     = "NFS-Datastore"
   description = "Nombre con el que aparecerá el Datastore NFS en el vCenter destino"
 }
 

@@ -63,3 +63,14 @@ resource "null_resource" "configure_iscsi_esxi" {
   # Depende de que los hosts estén creados en vSphere
   depends_on = [vsphere_host.hosts]
 }
+
+# Crear el datastore VMFS en el PRIMER host únicamente
+resource "vsphere_vmfs_datastore" "iscsi_datastore" {
+  count = var.iscsi_enabled ? 1 : 0
+
+  name           = var.iscsi_datastore_name
+  host_system_id = vsphere_host.hosts[0].id
+  disks          = [var.iscsi_disk_canonical_name]
+
+  depends_on = [null_resource.configure_iscsi_esxi]
+}

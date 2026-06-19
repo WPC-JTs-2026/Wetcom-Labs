@@ -34,6 +34,13 @@ resource "vsphere_virtual_machine" "esxi_vms" {
   nested_hv_enabled = true
   firmware          = "efi"
 
+  # Reserva de memoria al 100% para garantizar que el ESXi nested tenga
+  # toda la RAM asignada respaldada por páginas físicas. Sin esto, el host
+  # físico puede aplicar ballooning/swapping, haciendo que el ESXi nested
+  # reporte mucha menos RAM disponible (ej: 8 GB en vez de 24 GB),
+  # lo que falla el precheck de instalación de VCSA.
+  memory_reservation_locked_to_max = true
+
   # No esperar a que VMware Tools reporte la IP (ESXi no lo reporta igual que Linux/Windows)
   wait_for_guest_net_timeout = 0
 
