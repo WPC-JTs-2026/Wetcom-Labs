@@ -5,6 +5,14 @@ terraform {
       source  = "vmware/vsphere"
       version = "~> 2.15"
     }
+    null = {
+      source  = "hashicorp/null"
+      version = ">= 3.0.0"
+    }
+    local = {
+      source  = "hashicorp/local"
+      version = ">= 2.4.0"
+    }
   }
 }
 

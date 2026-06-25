@@ -184,10 +184,11 @@ deploy_stage() {
 
   pushd "${stage_dir}" >/dev/null
 
+  # Clean previous state files if existing for this new deploy
+  rm -f *.tfstate*
+  
   local attempt=1
   while true; do
-    # Clean previous state files if retrying or restarting (preserve existing behavior)
-    rm -f *.tfstate*
 
     if [ "${attempt}" -gt 1 ]; then
       echo "==> Retrying ${stage} (Attempt ${attempt}/${MAX_ATTEMPTS})..."

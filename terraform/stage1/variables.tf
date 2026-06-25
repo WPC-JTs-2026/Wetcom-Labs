@@ -179,6 +179,19 @@ variable "truenas_vm_netmask" {
 }
 
 variable "truenas_vm_gateway" {
-  type    = string
-  default = "10.106.3.1"
+  type        = string
+  default     = "10.106.3.1"
+  description = "Gateway para la VM de TrueNAS"
+}
+
+variable "truenas_ssh_password" {
+  type        = string
+  sensitive   = true
+  description = "Contraseña de root/SSH para la VM de TrueNAS"
+}
+
+variable "truenas_template_initial_ip" {
+  type        = string
+  default     = "10.106.3.210"
+  description = "IP inicial de la plantilla de TrueNAS para la primera conexión SSH"
 }

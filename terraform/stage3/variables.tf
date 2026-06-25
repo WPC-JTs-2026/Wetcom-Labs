@@ -31,9 +31,14 @@ variable "cluster_name" {
 # # # VARIABLES ESXI NESTED # # #
 
 variable "hosts_info" {
-  type        = list(map(string))
+  type = list(object({
+    address    = string
+    user       = string
+    password   = string
+    thumbprint = optional(string)
+  }))
   default     = []
-  description = "Lista de información de los hosts ESXi a agregar al vCenter. Debe contener los siguientes campos: user, password, address y, opcionalmente, thumbprint"
+  description = "Lista de información de los hosts ESXi a agregar al vCenter."
 }
 
 # # # VARIABLES TRUENAS # # #
@@ -90,9 +95,13 @@ variable "vmkernel_interface" {
 }
 
 variable "iscsi_network_config" {
-  type        = list(map(string))
+  type = list(object({
+    host_address  = string
+    iscsi_ip      = string
+    iscsi_netmask = string
+  }))
   default     = []
-  description = "Configuración de red iSCSI por host. Campos: host_address, iscsi_ip, iscsi_netmask"
+  description = "Configuración de red iSCSI por host."
 }
 
 variable "iscsi_datastore_name" {

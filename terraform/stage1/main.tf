@@ -44,21 +44,12 @@ resource "vsphere_virtual_machine" "esxi_vms" {
   # No esperar a que VMware Tools reporte la IP (ESXi no lo reporta igual que Linux/Windows)
   wait_for_guest_net_timeout = 0
 
-  # Interfaz de red - mapeada al port group de vSphere
-  network_interface {
-    network_id = data.vsphere_network.network.id
-  }
-
-  network_interface {
-    network_id = data.vsphere_network.network.id
-  }
-
-  network_interface {
-    network_id = data.vsphere_network.network.id
-  }
-
-  network_interface {
-    network_id = data.vsphere_network.network.id
+  # Interfaces de red mapeadas al port group de vSphere
+  dynamic "network_interface" {
+    for_each = range(4)
+    content {
+      network_id = data.vsphere_network.network.id
+    }
   }
 
   # Despliegue desde OVA local

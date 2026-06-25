@@ -3,8 +3,6 @@ resource "vsphere_datacenter" "dc" {
 }
 
 resource "vsphere_compute_cluster" "cluster" {
-  depends_on = [vsphere_datacenter.dc]
-
   name          = var.cluster_name
   datacenter_id = vsphere_datacenter.dc.moid
   
@@ -20,8 +18,6 @@ data "vsphere_host_thumbprint" "thumbprint" {
 }
 
 resource "vsphere_host" "hosts" {
-  depends_on = [vsphere_compute_cluster.cluster, data.vsphere_host_thumbprint.thumbprint]
-
   count      = length(var.hosts_info)
   hostname   = var.hosts_info[count.index].address
   username   = var.hosts_info[count.index].user

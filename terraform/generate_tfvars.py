@@ -41,6 +41,8 @@ STAGE1_MAPPING: Dict[str, Union[str, Callable[[Dict[str, Any]], Any]]] = {
     "truenas_vm_ip": "truenas.ip",
     "truenas_vm_gateway": "common_network.network_gateway",
     "truenas_vm_netmask": lambda g: 24,
+    "truenas_ssh_password": "truenas.ssh_password",
+    "truenas_template_initial_ip": "truenas.template_initial_ip",
     "esxi_hosts_info": lambda g: [
         {
             "user": g.get("esxi_hosts", {}).get("user"),

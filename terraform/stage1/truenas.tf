@@ -59,9 +59,9 @@ resource "vsphere_virtual_machine" "truenas_vm" {
   provisioner "file" {
     connection {
       type     = "ssh"
-      host     = "10.106.3.210"
+      host     = var.truenas_template_initial_ip
       user     = "root"
-      password = "Wetcom01!"
+      password = var.truenas_ssh_password
     }
 
     # SIN set -e: el script no debe abortar cuando SSH se corta por el commit
@@ -78,9 +78,9 @@ EOT
   provisioner "remote-exec" {
     connection {
       type     = "ssh"
-      host     = "10.106.3.210"
+      host     = var.truenas_template_initial_ip
       user     = "root"
-      password = "Wetcom01!"
+      password = var.truenas_ssh_password
     }
 
     inline = [
@@ -94,7 +94,7 @@ EOT
       type     = "ssh"
       host     = var.truenas_vm_ip
       user     = "root"
-      password = "Wetcom01!"
+      password = var.truenas_ssh_password
       timeout  = "3m" # tiempo máximo para establecer conexión
     }
 
@@ -110,7 +110,7 @@ EOT
       type     = "ssh"
       host     = var.truenas_vm_ip
       user     = "root"
-      password = "Wetcom01!"
+      password = var.truenas_ssh_password
     }
 
     content     = <<EOT
@@ -127,7 +127,7 @@ EOT
       type     = "ssh"
       host     = var.truenas_vm_ip
       user     = "root"
-      password = "Wetcom01!"
+      password = var.truenas_ssh_password
     }
 
     inline = [
