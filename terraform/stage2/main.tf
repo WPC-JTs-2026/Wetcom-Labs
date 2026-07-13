@@ -45,8 +45,16 @@ resource "null_resource" "deploy_vcsa" {
       fi
 
       # Agregar dependencias y permisos de ejecución al instalador y sus bibliotecas
-      export LD_LIBRARY_PATH="$extractPoint/vcsa-cli-installer/lin64:$extractPoint/vcsa-cli-installer/lin64/lib:$extractPoint/vcsa-cli-installer/lin64/lib/deps"
-      chmod +x "$LD_LIBRARY_PATH/"*.so || true
+      # Incluir libffi-6.0.4/lib para que el instalador encuentre libffi.so.6 (bundled)
+      export LD_LIBRARY_PATH="$extractPoint/vcsa-cli-installer/lin64/libffi-6.0.4/lib:$extractPoint/vcsa-cli-installer/lin64:$extractPoint/vcsa-cli-installer/lin64/lib:$extractPoint/vcsa-cli-installer/lin64/lib/deps:$extractPoint/vcsa-cli-installer/lin64/twisted/libffi-6.0.4/lib"
+      # Dar permisos a cada directorio por separado (no usar LD_LIBRARY_PATH como glob)
+      for libDir in \
+        "$extractPoint/vcsa-cli-installer/lin64" \
+        "$extractPoint/vcsa-cli-installer/lin64/lib" \
+        "$extractPoint/vcsa-cli-installer/lin64/lib/deps" \
+        "$extractPoint/vcsa-cli-installer/lin64/libffi-6.0.4/lib"; do
+        [ -d "$libDir" ] && find "$libDir" -maxdepth 1 -name "*.so*" -exec chmod +x {} + || true
+      done
       find "$extractPoint" -name "*.bin" -o -name "ovftool" | xargs chmod +x || true
       chmod +x "$installerPath" || true
 
